@@ -1,0 +1,23 @@
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+
+app = 'relay-server'
+primary_region = 'sjc'  # Update this to run the server closer to you for lower latency.
+kill_signal = 'SIGTERM'
+kill_timeout = '5m0s'
+
+[experimental]
+  auto_rollback = true
+  max_per_region = 1  # Important! Otherwise you risk data corruption...
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
