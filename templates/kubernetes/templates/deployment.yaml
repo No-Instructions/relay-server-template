@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}"
+  labels:
+    app.kubernetes.io/name: "{{ .Chart.Name }}"
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+    app.kubernetes.io/component: "{{ .Chart.Name }}"
+    app.kubernetes.io/part-of: "{{ .Chart.Name }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "{{ .Chart.Name }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "{{ .Chart.Name }}"
+    spec:
+      containers:
+      - name: "{{ .Chart.Name }}"
+        image: "{{ .Values.image.repository }}/{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 8080
+        resources: {{ toYaml .Values.resources | nindent 10 }}
+        env:
+        # Non-secret env vars from values.yaml
+        - name: Y_SWEET_URL_PREFIX
+          value: "{{ .Values.env.relayServerUrl }}"
+        - name: AWS_REGION
+          value: "{{ .Values.env.awsRegion }}"
+        - name: STORAGE_BUCKET
+          value: "{{ .Values.env.storageBucket }}"
+        - name: Y_SWEET_STORE
+          value: "s3://{{ .Values.env.storageBucket }}/"
+        - name: AWS_ENDPOINT_URL_S3
+          value: "{{ .Values.env.aws_endpoint_url_s3 }}"
+        # Secret env vars from KeyVault
+        - name: Y_SWEET_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.name }}-auth-token"
+              key: Y_SWEET_AUTH
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.name }}-aws-access-key"
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.name }}-aws-secret-key"
+              key: AWS_SECRET_ACCESS_KEY
