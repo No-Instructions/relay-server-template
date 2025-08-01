@@ -1,4 +1,4 @@
-# Kubernetes inside Custom VPN + S3-compatible storage
+# Kubernetes with [Tigris](https://www.tigrisdata.com/docs/) storage + [Azure Key Vault](https://azure.microsoft.com/en-us/products/key-vault)
 
 This uses `helm` to fill in the template files included.
 
@@ -9,7 +9,7 @@ for your deployment.
 helm install obsidian-relay-server deploy --namespace <your-namespace> --create-namespace
 ```
 
-## Secrets (requires Azure KeyVault)
+## Secrets
 
 This template uses Azure KeyVault for secrets. If you aren't using Azure, you'll need a
 completely different way to inject these 3 environment variables securely, which will mean
@@ -27,6 +27,3 @@ obsidian-relay-server-aws-secret-key
 If you change the name of the Chart from `obsidian-relay-server` to something else, you'll
 need that same prefix on the above secret names
 (`s/obsidian-relay-server/your-chart-name/`).
-
-There's probably a slightly simpler way to do this even within Azure, so hopefully
-somebody else can contribute an improvement to this chart. :)
