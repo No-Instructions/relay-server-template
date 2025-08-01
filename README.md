@@ -103,7 +103,7 @@ Templates:
 
 ### Kubernetes
 
-[Kubernetes with S3](https://github.com/No-Instructions/relay-server-template/tree/main/templates/kubernetes)
+[Kubernetes with Tigris + Azure Key Vault](https://github.com/No-Instructions/relay-server-template/tree/main/templates/kubernetes)
 
 # Acknowledgements
 
