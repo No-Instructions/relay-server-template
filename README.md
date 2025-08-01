@@ -21,7 +21,7 @@ email: daniel@system3.md
 
 ![Security Architecture](architecture.png)
 
-When hosting an on-premise Relay Server there is an auth token that is shared between the Relay Control Plan and your Relay Server.
+When hosting an on-premise Relay Server there is an auth token that is shared between the Relay Control Plane and your Relay Server.
 The shared auth token allows the Relay control plane to issue tokens which grants users access your Relay Server.
 
 It is technically possible for the Relay control plane to issue an access token and then use it to connect to your Relay Server if it is hosted on the public internet.
