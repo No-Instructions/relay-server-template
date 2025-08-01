@@ -1,0 +1,30 @@
+name: obsidian-relay-server
+replicaCount: 1
+hostname: obsidian-relay-server.zzz.com  # your custom domain
+image:
+  repository: docker.system3.md
+  tag: relay-server
+  pullPolicy: Always
+resources:
+  requests:
+    cpu: 1
+    memory: 4Gi
+  limits:
+    cpu: 1
+    memory: 4Gi
+port: 8080
+
+# Non-secret environment variables
+env:
+  relayServerUrl: "https://obsidian-relay-server.zzz.com"  # must match above hostname
+  # This shows how to use Fly.io's Tigris object store.
+  # You can use S3, or R2, or something else that's S3-compatible...
+  aws_endpoint_url_s3: "https://fly.storage.tigris.dev"
+  storageBucket: your-tigris-bucket-name-1986
+  awsRegion: auto
+
+# if you don't use Azure KeyVault for your secrets, you'll need to figure out your own solution here,
+# and edit templates/secrets.yaml accordingly.
+azure:
+  keyVault:
+    name: an-azure-keyvault-name

@@ -101,6 +101,9 @@ Templates:
 
 [Custom VPN with R2](templates/fly-r2-custom.md)
 
+### Kubernetes
+
+[Kubernetes with S3](templates/kubernetes/README.md)
 
 # Acknowledgements
 
