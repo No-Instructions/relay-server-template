@@ -29,7 +29,7 @@ It is technically possible for the Relay control plane to issue an access token 
 **To ensure that your documents are fully private, you need to host your Relay Server on a private network such as a tailscale tailnet or a corporate VPN.**
 **If you don't already have a private network set up, we recommend using tailscale.**
 
-Whenever you change the URL of your server, you will need to update Y_SWEET_URL_PREFIX to your new url and notify us.
+Whenever you change the URL of your server, you will need to update RELAY_SERVER_URL_PREFIX to your new url and notify us.
 
 
 ## Hosting with Docker
@@ -38,7 +38,7 @@ This `auth.env` file is a template for all of the variables that you need to set
 
 ```auth.env
 # Auth Token from Relay Team (contact daniel@system3.md)
-Y_SWEET_AUTH=${AUTH_TOKEN}
+RELAY_SERVER_AUTH=${AUTH_TOKEN}
 
 # Cloudflare R2
 AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -46,14 +46,14 @@ AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 AWS_REGION=auto
 STORAGE_BUCKET=${BUCKET}
 AWS_ENDPOINT_URL_S3=https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
-Y_SWEET_STORE=s3://${BUCKET}/
+RELAY_SERVER_STORE=s3://${BUCKET}/
 
 # Tailscale
 TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY}
 TAILSCALE_USERSPACE_NETWORKING=true
 
 # Tailscale Tailnet Address
-Y_SWEET_URL_PREFIX=http://relay-server.${TAILNET_NAME}.ts.net:8080
+RELAY_SERVER_URL_PREFIX=http://relay-server.${TAILNET_NAME}.ts.net:8080
 ```
 
 Once you have all of the environment variables configured you can run the server with docker.

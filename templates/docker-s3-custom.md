@@ -2,18 +2,18 @@
 
 ```auth.env
 # Relay
-Y_SWEET_AUTH=${AUTH_TOKEN}
+RELAY_SERVER_AUTH=${AUTH_TOKEN}
 
 ## Set this to a server URL that will be accessible to users on the private network
 ## The default port is 8080 unless you are running a reverse proxy.
-Y_SWEET_URL_PREFIX=${RELAY_SERVER_URL}
+RELAY_SERVER_URL_PREFIX=${RELAY_SERVER_URL}
 
 # AWS S3
 AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 AWS_REGION=${BUCKET_REGION}
 STORAGE_BUCKET=${BUCKET}
-Y_SWEET_STORE=s3://${BUCKET}/
+RELAY_SERVER_STORE=s3://${BUCKET}/
 ```
 
 ```bash

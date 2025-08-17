@@ -62,6 +62,6 @@ flyctl ips release <your public ipv4>
 ### Deploying to .flycast
 Deploying with `--flycast` will allocate you app a private ipv6 address and make it routeable within your fly network.
 ```
-fly secrets set Y_SWEET_URL_PREFIX=http://$APP_NAME.flycast:8080
+fly secrets set RELAY_SERVER_URL_PREFIX=http://$APP_NAME.flycast:8080
 fly deploy --flycast
 ```
