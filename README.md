@@ -5,7 +5,7 @@
 While you cannot self-host the entire Relay service, hosting an on-premise Relay Server provides you with full privacy for your documents and attachments.
 Relay's Control Plane handles login and permissions management, but is unable to read the contents of your documents.
 
-The simplest setup for personal use is to host a Relay Server with Docker and use Cloudflare R2 for data persistence.
+The simplest setup for personal use is to host a Relay Server with Docker Compose and use Minio (self-hosted S3-compatible API) for data persistence.
 
 
 ## Contact Us
@@ -66,7 +66,24 @@ docker run -it \
   docker.system3.md/relay-server
 ```
 
-## Other hosting options
+## S3-compatible storage
+
+Relay Server is built to store data to S3-compatible storage.
+You will find examples in this repo that use:
+- [AWS S3](https://aws.amazon.com/s3/)
+- [Cloudflare R2](https://www.cloudflare.com/developer-platform/products/r2/)
+- [MinIO](https://min.io) (self-hosted)
+- [Tigris](https://www.tigrisdata.com/docs/) (great for fly.io)
+
+## Example Configuration
+
+### Docker Compose
+Templates:
+
+[Tailscale (http) with MinIO](templates/docker-compose/minio-tailscale.yaml)
+
+[Custom VPN with MinIO](docker-compose.yaml)
+
 
 ### Docker
 Templates:
