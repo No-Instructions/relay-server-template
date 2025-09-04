@@ -1,3 +1,17 @@
+#
+# Tailscale-enabled docker-compose for Relay Server with MinIO
+#
+# Required environment variables:
+# TS_AUTHKEY - Tailscale auth key
+# RELAY_SERVER_AUTH - Auth token from Relay team
+# RELAY_SERVER_URL_PREFIX - Tailscale URL for relay server (e.g., http://relay-server.tailnet.ts.net:8080)
+# AWS_ENDPOINT_URL_S3 - Tailscale URL for MinIO (should match RELAY_SERVER_URL_PREFIX but port 9000)
+#
+# Example configuration:
+# RELAY_SERVER_URL_PREFIX=http://relay-server.mytailnet.ts.net:8080
+# AWS_ENDPOINT_URL_S3=http://relay-server.mytailnet.ts.net:9000
+#
+
 services:
   tailscale:
     image: tailscale/tailscale:latest
@@ -15,6 +29,7 @@ services:
     restart: unless-stopped
     ports:
       - 8080:8080 # relay-server
+      - 9000:9000 # minio API - required for client access to presigned URLs
       - 9091:9091 # minio console
 
   minio:
@@ -41,7 +56,7 @@ services:
     network_mode: 'service:tailscale'
     environment:
       - AWS_S3_USE_PATH_STYLE=true
-      - AWS_ENDPOINT_URL_S3=http://minio:9000
+      - AWS_ENDPOINT_URL_S3=${AWS_ENDPOINT_URL_S3:-http://localhost:9000}
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-minioadmin}
       - RELAY_SERVER_STORAGE=${RELAY_SERVER_STORAGE:-s3://relaymd}

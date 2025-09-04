@@ -5,18 +5,22 @@
 # MINIO_ROOT_USER
 # MINIO_ROOT_PASSWORD
 # RELAY_SERVER_AUTH
+# AWS_ENDPOINT_URL_S3 (set to a URL accessible to clients, e.g., http://localhost:9000)
 #
-# This setup also assumes that you have your own corporate VPN.
-# If you plan to use tailscale see:
-#   /templates/docker-compose/minio-tailscale.yaml
+# IMPORTANT: This setup exposes MinIO on port 9000. For production use with
+# proper security, consider using Tailscale or a corporate VPN instead.
+# See: /templates/docker-compose/minio-tailscale.yaml
+#
+# This configuration assumes clients can reach the MinIO server at the same
+# URL specified in AWS_ENDPOINT_URL_S3.
 
 services:
   # minio is a self-hostable S3-compatible API
   minio:
     container_name: minio
-    #ports: # be sure to change the password before exposing these ports
-    #  - 9091:9091 # minio console
-    #  - 9000:9000 # minio API
+    ports:
+      - 9000:9000 # minio API - required for client access to presigned URLs
+      #- 9091:9091 # minio console (optional, for web UI access)
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minioadmin}
@@ -40,7 +44,7 @@ services:
       - 8080:8080
     environment:
       - AWS_S3_USE_PATH_STYLE=true
-      - AWS_ENDPOINT_URL_S3=http://minio:9000
+      - AWS_ENDPOINT_URL_S3=${AWS_ENDPOINT_URL_S3:-http://localhost:9000}
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-minioadmin}
       - RELAY_SERVER_AUTH=${RELAY_SERVER_AUTH}
