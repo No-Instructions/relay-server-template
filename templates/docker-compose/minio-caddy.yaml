@@ -1,26 +1,34 @@
 #
-# This is the simplest example for development, but is not secure by default.
+# Docker Compose with Caddy reverse proxy for unified access
+#
+# This setup provides:
+# - Single external URL for both relay server and MinIO access
+# - Relay server accessible at http://localhost/
+# - MinIO bucket "relaymd" hosted at http://localhost/relaymd/
 #
 # To secure this deployment, make sure that you set the following env vars:
 # MINIO_ROOT_USER
 # MINIO_ROOT_PASSWORD
 # RELAY_SERVER_AUTH
-# AWS_ENDPOINT_URL_S3 (set to a URL accessible to clients, e.g., http://localhost:9000)
-#
-# IMPORTANT: This setup exposes MinIO on port 9000. For production use with
-# proper security, consider using Tailscale or a corporate VPN instead.
-# See: /templates/docker-compose/minio-tailscale.yaml
-#
-# This configuration assumes clients can reach the MinIO server at the same
-# URL specified in AWS_ENDPOINT_URL_S3.
+# RELAY_SERVER_URL_PREFIX (e.g., http://localhost or https://yourdomain.com)
 
 services:
+  # Caddy is required because 
+  caddy:
+    image: caddy:alpine
+    container_name: relay-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    configs:
+      - source: caddyfile
+        target: /etc/caddy/Caddyfile
+    restart: unless-stopped
+
   # minio is a self-hostable S3-compatible API
   minio:
     container_name: minio
-    ports:
-      - 9000:9000 # minio API - required for client access to presigned URLs
-      #- 9091:9091 # minio console (optional, for web UI access)
+    network_mode: 'service:caddy'
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minioadmin}
@@ -33,28 +41,42 @@ services:
     image: quay.io/minio/minio
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
+      interval: 1s
       timeout: 20s
       retries: 3
 
   relay-server:
     image: docker.system3.md/relay-server:latest
     container_name: relay-server
-    ports:
-      - 8080:8080
+    network_mode: 'service:caddy'
     environment:
+      - RUST_LOG=trace
       - AWS_S3_USE_PATH_STYLE=true
-      - AWS_ENDPOINT_URL_S3=${AWS_ENDPOINT_URL_S3:-http://localhost:9000}
+      - AWS_ENDPOINT_URL_S3=${RELAY_SERVER_URL_PREFIX:-http://localhost:80}
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minioadmin}
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-minioadmin}
       - RELAY_SERVER_AUTH=${RELAY_SERVER_AUTH}
       - RELAY_SERVER_STORAGE=${RELAY_SERVER_STORAGE:-s3://relaymd}
-      - RELAY_SERVER_URL_PREFIX=${RELAY_SERVER_URL_PREFIX}
+      - RELAY_SERVER_URL_PREFIX=${RELAY_SERVER_URL_PREFIX:-http://localhost:80}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/ready"]
       interval: 30s
       timeout: 20s
       retries: 3
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     restart: unless-stopped
+
+configs:
+  caddyfile:
+    content: |
+      ${RELAY_SERVER_URL_PREFIX:-http://localhost:80} {
+          handle /relaymd/* {
+              reverse_proxy localhost:9000
+          }
+      
+          handle_path /* {
+              reverse_proxy localhost:8080
+          }
+      }

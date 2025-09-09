@@ -2,9 +2,11 @@
 
 [Relay](https://relay.md) supports self-hosting your Relay Server for added privacy.
 
-If you host an on-premise Relay Server it provides you with full privacy for your documents and attachments. Relay's Control Plane handles login and permissions management, but is unable to read the contents of your documents.
+If you host an on-premise Relay Server it provides you with full privacy for your documents and attachments.
 
-Full on-prem hosting (both a Relay Server and the Relay Control Plan) is only available as part of our Enterprise plan.
+Relay's Control Plane handles login and permissions management, but is unable to read the contents of your documents.
+
+Full on-prem hosting (both a Relay Server and the Relay Control Plane) is only available as part of our Enterprise plan.
 
 
 ## Security Architecture
@@ -26,10 +28,11 @@ Before getting started, you need to make three key decisions:
 
 ### 1. Storage Provider
 Choose where to store your documents:
-- **AWS S3** - Most reliable, pay-per-use
-- **Cloudflare R2** - S3-compatible, competitive pricing  
-- **MinIO** - Self-hosted, full control, requires maintenance
+- **AWS S3**
+- **Cloudflare R2** - Easiest to set up
+- **Backblaze B2**
 - **Tigris** - Great for Fly.io deployments
+- **MinIO** - Self-hosted, more complex
 
 ### 2. Network Access
 Choose how users will access your server:
@@ -77,19 +80,13 @@ Relay Server is built to store data to S3-compatible storage.
 You will find examples in this repo that use:
 - [AWS S3](https://aws.amazon.com/s3/)
 - [Cloudflare R2](https://www.cloudflare.com/developer-platform/products/r2/)
+- [Backblaze B2](https://www.backblaze.com/cloud-storage)
 - [MinIO](https://min.io) (self-hosted)
 - [Tigris](https://www.tigrisdata.com/docs/) (great for fly.io)
 
 ## Templates
 
 Choose your template based on your decisions above:
-
-### Docker Compose (Recommended for getting started)
-
-| Storage | Network | Template |
-|---------|---------|----------|
-| MinIO | Tailscale | [minio-tailscale.yaml](templates/docker-compose/minio-tailscale.yaml) |
-| MinIO | Custom VPN | [docker-compose.yaml](docker-compose.yaml) |
 
 ### Docker (Single container)
 
@@ -101,6 +98,12 @@ Choose your template based on your decisions above:
 | Cloudflare R2 | Tailscale | [docker-r2-tailscale.md](templates/docker-r2-tailscale.md) |
 | Cloudflare R2 | Tailscale (HTTPS) | [docker-r2-tailscale-serve.md](templates/docker-r2-tailscale-serve.md) |
 | Cloudflare R2 | Custom VPN | [docker-r2-custom.md](templates/docker-r2-custom.md) |
+
+### Docker Compose
+
+| Storage | Network | Template |
+|---------|---------|----------|
+| MinIO | Tailscale | [minio-tailscale.yaml](templates/docker-compose/minio-tailscale.yaml) |
 
 ### Fly.io (Serverless platform)
 
