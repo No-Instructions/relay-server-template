@@ -1,0 +1,43 @@
+# Caddyfile for Relay Server with automatic HTTPS
+# 
+# This configuration:
+# - Automatically obtains SSL certificates from Let's Encrypt
+# - Proxies all traffic to the relay-server container
+# - Adds proper headers for the relay server
+
+{$DOMAIN} {
+    # Reverse proxy to relay-server container
+    reverse_proxy relay-server:8080 {
+        # Pass original host header
+        header_up Host {host}
+        # Pass real IP to relay server
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Enable compression
+    encode gzip
+
+    # Security headers
+    header {
+        # Remove server header
+        -Server
+        # Add security headers
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+        # HSTS (31536000 seconds = 1 year)
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    }
+
+    # Health check endpoint (optional)
+    handle /health {
+        respond "OK" 200
+    }
+
+    # Log access (optional - can be removed for production)
+    log {
+        output file /var/log/caddy/access.log
+    }
+}

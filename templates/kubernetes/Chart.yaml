@@ -1,5 +1,5 @@
 apiVersion: v2
-name: obsidian-relay-server  # could customize this if you wanted
+name: relay-server  # could customize this if you wanted
 version: "1.0.0"
 appVersion: "1.0.0"
 description: Obsidian Relay Server

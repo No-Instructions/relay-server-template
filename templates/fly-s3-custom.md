@@ -1,20 +1,39 @@
 # Fly.io + S3 + Custom VPN
 
+```toml
+# relay.toml
+[server]
+host = "0.0.0.0"
+port = 8080
+
+# Set this to the private URL of your Relay Server
+# url = http://${FLY_APP_NAME}.flycast:8080
+
+[store]
+type = "aws"
+bucket = "my-bucket"
+region = "us-east-1"
+prefix = ""                  # Optional path prefix within bucket
+
+# Relay.md public keys
+[[auth]]
+key_id = "relay_2025_10_22"
+public_key = "/6OgBTHaRdWLogewMdyE+7AxnI0/HP3WGqRs/bYBlFg="
+
+[[auth]]
+key_id = "relay_2025_10_23"
+public_key = "fbm9JLHrwPpST5HAYORTQR/i1VbZ1kdp2ZEy0XpMbf0="
+```
+
 ```auth.env
-# Relay
-RELAY_SERVER_AUTH=${AUTH_TOKEN}
-
-## Set this to a server URL that will be accessible to users on the private network
-## The default port is 8080 unless you are running a reverse proxy.
-RELAY_SERVER_URL_PREFIX=${RELAY_SERVER_URL}
-
 # AWS S3
 AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-AWS_REGION=${BUCKET_REGION}
-STORAGE_BUCKET=${BUCKET}
-AWS_ENDPOINT_URL_S3=https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
-RELAY_SERVER_STORAGE=s3://${BUCKET}/
+```
+
+```Dockerfile
+FROM docker.system3.md/relay-server:latest
+COPY relay.toml /app/relay.toml
 ```
 
 ```fly.toml
@@ -23,6 +42,9 @@ app = '${FLY_APP_NAME}'
 primary_region = '${FLY_REGION}'  # flyctl platform regions
 kill_signal = 'SIGTERM'
 kill_timeout = '5m0s'
+
+[build]
+  dockerfile = Dockerfile
 
 [experimental]
   auto_rollback = true

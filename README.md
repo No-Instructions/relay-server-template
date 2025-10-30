@@ -6,15 +6,12 @@ If you host an on-premise Relay Server it provides you with full privacy for you
 
 Relay's Control Plane handles login and permissions management, but is unable to read the contents of your documents.
 
-Full on-prem hosting (both a Relay Server and the Relay Control Plane) is only available as part of our Enterprise plan.
-
 
 ## Security Architecture
 
 ![Security Architecture](architecture.png)
 
-When hosting an on-premise Relay Server there is an auth token that is shared between the Relay Control Plane and your Relay Server.
-The shared auth token allows the Relay control plane to issue tokens which grants users access your Relay Server.
+On-premise Relay Servers rely on public key cryptography to trust tokens that are issued by the Relay Control Plane.
 
 It is technically possible for the Relay control plane to issue an access token and then use it to connect to your Relay Server if it is hosted on the public internet.
 
@@ -48,15 +45,16 @@ Choose where to run your server:
 
 ## Getting Started
 
-1. **Get an auth token**: Contact daniel@system3.md or join [Discord](https://discord.system3.md)
+1. **Pick your template**: See [Templates](#templates) section below based on your choices above
 
-2. **Pick your template**: See [Templates](#templates) section below based on your choices above
+2. **Follow the template instructions**: Each template includes complete setup steps
 
-3. **Follow the template instructions**: Each template includes complete setup steps
+3. **Register your Relay Server with us**: Contact daniel@system3.md or join [Discord](https://discord.system3.md)
 
 ## Contact Us
-Contact us to get an auth token for your on-premise Relay Server.
 
+We're in the process of making self-hosting available to everyone via the Relay Plugin UI.
+In the mean-time, you will need to contact us to register your Relay Server.
 
 discord: [https://discord.system3.md](https://discord.system3.md)
 

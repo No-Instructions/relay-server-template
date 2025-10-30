@@ -27,23 +27,25 @@ spec:
         - containerPort: 8080
         resources: {{ toYaml .Values.resources | nindent 10 }}
         env:
-        # Non-secret env vars from values.yaml
-        - name: Y_SWEET_URL_PREFIX
+        # Public URL for your service
+        - name: RELAY_SERVER_URL
           value: "{{ .Values.env.relayServerUrl }}"
+        # S3 storage
+        - name: RELAY_SERVER_STORAGE
+          value: "{{ .Values.env.relayServerStorage }}"
+        {{- if .Values.env.awsRegion }}
         - name: AWS_REGION
           value: "{{ .Values.env.awsRegion }}"
-        - name: STORAGE_BUCKET
-          value: "{{ .Values.env.storageBucket }}"
-        - name: Y_SWEET_STORE
-          value: "s3://{{ .Values.env.storageBucket }}/"
+        {{- end }}
+        {{- if .Values.env.awsEndpointUrlS3 }}
         - name: AWS_ENDPOINT_URL_S3
-          value: "{{ .Values.env.aws_endpoint_url_s3 }}"
+          value: "{{ .Values.env.awsEndpointUrlS3 }}"
+        {{- end }}
+        {{- if .Values.env.awsS3UsePathStyle }}
+        - name: AWS_S3_USE_PATH_STYLE
+          value: "{{ .Values.env.awsS3UsePathStyle }}"
+        {{- end }}
         # Secret env vars from KeyVault
-        - name: Y_SWEET_AUTH
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Values.name }}-auth-token"
-              key: Y_SWEET_AUTH
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:

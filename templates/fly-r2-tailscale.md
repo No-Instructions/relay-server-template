@@ -1,20 +1,42 @@
 # Fly.io + R2 + Tailscale (http)
 
-```auth.env
-# Relay
-RELAY_SERVER_AUTH=${AUTH_TOKEN}
-RELAY_SERVER_URL_PREFIX=http://relay-server.${TAILNET_NAME}.ts.net:8080
+```toml
+# relay.toml
+[server]
+host = "0.0.0.0"
+port = 8080
 
+# Set this to the private URL of your Relay Server
+# url = http://relay-server.${TAILNET_NAME}.ts.net:8080
+
+[store]
+type = "cloudflare"
+account_id = "abc123..."
+bucket = "my-bucket"
+prefix = ""                  # Optional path prefix within bucket
+
+# Relay.md public keys
+[[auth]]
+key_id = "relay_2025_10_22"
+public_key = "/6OgBTHaRdWLogewMdyE+7AxnI0/HP3WGqRs/bYBlFg="
+
+[[auth]]
+key_id = "relay_2025_10_23"
+public_key = "fbm9JLHrwPpST5HAYORTQR/i1VbZ1kdp2ZEy0XpMbf0="
+```
+
+```auth.env
 # Tailscale
 TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY}
 
 # Cloudflare R2
 AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-AWS_REGION=auto
-STORAGE_BUCKET=${BUCKET}
-AWS_ENDPOINT_URL_S3=https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
-RELAY_SERVER_STORAGE=s3://${BUCKET}/
+```
+
+```Dockerfile
+FROM docker.system3.md/relay-server:latest
+COPY relay.toml /app/relay.toml
 ```
 
 ```fly.toml
@@ -22,6 +44,9 @@ app = '${FLY_APP_NAME}'
 primary_region = '${FLY_REGION}'  # flyctl platform regions
 kill_signal = 'SIGTERM'
 kill_timeout = '5m0s'
+
+[build]
+  dockerfile = Dockerfile
 
 [experimental]
   auto_rollback = true

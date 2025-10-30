@@ -1,27 +1,37 @@
 # Docker + R2 + Custom VPN
 
+```toml
+# relay.toml
+[server]
+host = "0.0.0.0"
+port = 8080
+
+[store]
+type = "cloudflare"
+account_id = "abc123..."
+bucket = "my-bucket"
+prefix = ""                  # Optional path prefix within bucket
+
+# Relay.md public keys
+[[auth]]
+key_id = "relay_2025_10_22"
+public_key = "/6OgBTHaRdWLogewMdyE+7AxnI0/HP3WGqRs/bYBlFg="
+
+[[auth]]
+key_id = "relay_2025_10_23"
+public_key = "fbm9JLHrwPpST5HAYORTQR/i1VbZ1kdp2ZEy0XpMbf0="
+```
+
 ```auth.env
-# Relay
-RELAY_SERVER_AUTH=${AUTH_TOKEN}
-
-## Set this to a server URL that will be accessible to users on the private network
-## The default port is 8080 unless you are running a reverse proxy.
-RELAY_SERVER_URL_PREFIX=${RELAY_SERVER_URL}
-
-# Cloudflare R2
 AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-AWS_REGION=auto
-STORAGE_BUCKET=${BUCKET}
-AWS_ENDPOINT_URL_S3=https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
-RELAY_SERVER_STORAGE=s3://${BUCKET}/
-
 ```
 
 ```bash
 docker run -d \
   --name relay-server \
   --env-file auth.env \
+  -v ./relay.toml:/app/relay.toml \
   -p 8080:8080 \
-  docker.system3.md/relay-server
+  docker.system3.md/relay-server https://relay-server.private.network
 ```
