@@ -2,7 +2,7 @@
 
 [Relay](https://relay.md) supports self-hosting your Relay Server for added privacy.
 
-If you host an on-premise Relay Server it provides you with full privacy for your documents and attachments.
+If you host your own Relay Server it provides you with full privacy for your documents and attachments.
 
 Relay's Control Plane handles login and permissions management, but is unable to read the contents of your documents.
 
@@ -11,12 +11,15 @@ Relay's Control Plane handles login and permissions management, but is unable to
 
 ![Security Architecture](architecture.png)
 
-On-premise Relay Servers rely on public key cryptography to trust tokens that are issued by the Relay Control Plane.
+Self-hosted Relay Servers rely on public key cryptography to trust tokens that are issued by the Relay Control Plane.
 
 It is technically possible for the Relay control plane to issue an access token and then use it to connect to your Relay Server if it is hosted on the public internet.
 
 **To ensure that your documents are fully private, you need to host your Relay Server on a private network such as a tailscale tailnet or a corporate VPN.**
+
 **If you don't already have a private network set up, we recommend using tailscale.**
+
+**If you host your Relay Server on the public internet, we reserve the right to drop it from our network.**
 
 
 ## Choose Your Setup
@@ -24,12 +27,15 @@ It is technically possible for the Relay control plane to issue an access token 
 Before getting started, you need to make three key decisions:
 
 ### 1. Storage Provider
-Choose where to store your documents:
+Choose where to store your data:
+
+S3-Compatible storage providers:
 - **AWS S3**
 - **Cloudflare R2** - Easiest to set up
 - **Backblaze B2**
 - **Tigris** - Great for Fly.io deployments
-- **MinIO** - Self-hosted, more complex
+
+Local Disk (not recommended for production)
 
 ### 2. Network Access
 Choose how users will access your server:
@@ -40,7 +46,7 @@ Choose how users will access your server:
 ### 3. Hosting Platform
 Choose where to run your server:
 - **Docker/Docker Compose** - Local or VPS deployment
-- **Fly.io** - Serverless platform with global edge locations
+- **Fly.io** - Cloud provider with a great developer experience
 - **Kubernetes** - Enterprise container orchestration
 
 ## Getting Started
@@ -49,28 +55,14 @@ Choose where to run your server:
 
 2. **Follow the template instructions**: Each template includes complete setup steps
 
-3. **Register your Relay Server with us**: Contact daniel@system3.md or join [Discord](https://discord.system3.md)
+3. **Register your Relay Server**: Open Obsidian and run the command `Relay: Register self-hosted relay server`
 
-## Contact Us
+## Contact
 
-We're in the process of making self-hosting available to everyone via the Relay Plugin UI.
-In the mean-time, you will need to contact us to register your Relay Server.
+Join our community on discord: [https://discord.system3.md](https://discord.system3.md)
 
-discord: [https://discord.system3.md](https://discord.system3.md)
+Or email: daniel@relay.md
 
-email: daniel@system3.md
-
-
-## Validation
-
-After following your chosen template, verify everything is working:
-
-```bash
-# Check relay server health
-curl -f http://localhost:8080/ready
-```
-
-**Expected**: health check returns HTTP 200.
 
 ## S3-compatible storage
 
@@ -96,12 +88,6 @@ Choose your template based on your decisions above:
 | Cloudflare R2 | Tailscale | [docker-r2-tailscale.md](templates/docker-r2-tailscale.md) |
 | Cloudflare R2 | Tailscale (HTTPS) | [docker-r2-tailscale-serve.md](templates/docker-r2-tailscale-serve.md) |
 | Cloudflare R2 | Custom VPN | [docker-r2-custom.md](templates/docker-r2-custom.md) |
-
-### Docker Compose
-
-| Storage | Network | Template |
-|---------|---------|----------|
-| MinIO | Tailscale | [minio-tailscale.yaml](templates/docker-compose/minio-tailscale.yaml) |
 
 ### Fly.io (Serverless platform)
 
