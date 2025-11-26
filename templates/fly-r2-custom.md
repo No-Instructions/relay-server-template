@@ -1,21 +1,34 @@
-# Fly.io + R2 + Custom VPN
+# Fly.io + Cloudflare R2 + Custom VPN
+
+This template sets up a Relay Server on Fly.io with Cloudflare R2 storage, accessible via your custom VPN or private network using Fly.io's private networking.
+
+## Prerequisites
+
+- [Fly.io account](https://fly.io/) and `flyctl` installed
+- Custom VPN or private network configured with Fly.io WireGuard
+- [Cloudflare R2](https://developers.cloudflare.com/r2/) bucket and API credentials
+
+## Setup Instructions
+
+### 1. Create the configuration file
+
+Create a file named **`relay.toml`** in your project directory:
 
 ```toml
-# relay.toml
 [server]
 host = "0.0.0.0"
 port = 8080
 
-# Set this to the private URL of your Relay Server
-# url = http://${FLY_APP_NAME}.flycast:8080
+# Set this to your Fly.io app's private URL
+# url = "http://YOUR-APP-NAME.flycast:8080"
 
 [store]
 type = "cloudflare"
-account_id = "abc123..."
-bucket = "my-bucket"
-prefix = ""                  # Optional path prefix within bucket
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"  # Replace with your Cloudflare account ID
+bucket = "YOUR-BUCKET-NAME"               # Replace with your R2 bucket name
+prefix = ""                               # Optional: path prefix within bucket
 
-# Relay.md public keys
+# Relay.md public keys (do not change these)
 [[auth]]
 key_id = "relay_2025_10_22"
 public_key = "/6OgBTHaRdWLogewMdyE+7AxnI0/HP3WGqRs/bYBlFg="
@@ -25,26 +38,38 @@ key_id = "relay_2025_10_23"
 public_key = "fbm9JLHrwPpST5HAYORTQR/i1VbZ1kdp2ZEy0XpMbf0="
 ```
 
-```auth.env
-# Cloudflare R2
-AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+### 2. Create the environment file
+
+Create a file named **`auth.env`** with your credentials:
+
+```bash
+# Cloudflare R2 - Get these from Cloudflare R2 > Manage R2 API Tokens
+AWS_ACCESS_KEY_ID=your-r2-access-key-id
+AWS_SECRET_ACCESS_KEY=your-r2-secret-access-key
 ```
 
-```Dockerfile
+### 3. Create the Dockerfile
+
+Create a file named **`Dockerfile`**:
+
+```dockerfile
 FROM docker.system3.md/relay-server:latest
 COPY relay.toml /app/relay.toml
 ```
 
-```fly.toml
-app = '${FLY_APP_NAME}'
+### 4. Create the Fly.io configuration
 
-primary_region = '${FLY_REGION}'  # flyctl platform regions
+Create a file named **`fly.toml`**:
+
+```toml
+app = 'YOUR-APP-NAME'              # Replace with your chosen app name
+
+primary_region = 'sjc'             # Replace with your preferred region
 kill_signal = 'SIGTERM'
 kill_timeout = '5m0s'
 
 [build]
-  dockerfile = Dockerfile
+  dockerfile = "Dockerfile"
 
 [experimental]
   auto_rollback = true
@@ -64,8 +89,54 @@ kill_timeout = '5m0s'
   cpus = 1
 ```
 
+### 5. Update your configuration
+
+1. **Replace placeholders**:
+   - In `relay.toml`: Update Cloudflare account ID and bucket name
+   - In `fly.toml`: Update `YOUR-APP-NAME` and preferred region
+
+2. **Create the Fly.io app**:
+   ```bash
+   flyctl apps create YOUR-APP-NAME
+   ```
+
+### 6. Deploy to Fly.io with private networking
+
 ```bash
 flyctl deploy \
     --file-secret auth.env \
-    --flycast  # private networking only
+    --flycast
 ```
+
+### 7. Set up WireGuard VPN access
+
+Connect to your Fly.io private network:
+
+```bash
+# Create WireGuard configuration
+flyctl wireguard create personal sjc
+
+# Move configuration and connect
+sudo mv fly.conf /etc/wireguard/
+sudo wg-quick up fly
+```
+
+### 8. Get your server URL
+
+Your app will be available at:
+```
+http://YOUR-APP-NAME.flycast:8080
+```
+
+Update the `url` field in `relay.toml`, then redeploy:
+
+```bash
+flyctl deploy --file-secret auth.env --flycast
+```
+
+### 9. Register with Obsidian
+
+1. Ensure you're connected to the Fly.io WireGuard network
+2. Open Obsidian
+3. Run the command: **Relay: Register self-hosted relay server**
+4. Enter your server URL: `http://YOUR-APP-NAME.flycast:8080`

@@ -1,0 +1,103 @@
+# relay.toml - Relay Server Configuration File
+
+[server]
+url = "https://api.example.com"  # RELAY_SERVER_URL
+
+host = "0.0.0.0"                 # RELAY_SERVER_HOST
+port = 8080                      # PORT
+
+[metrics]
+port = 9090                      # METRICS_PORT
+
+[logging]
+level = "info"                   # RUST_LOG
+format = "pretty"                # RELAY_SERVER_LOG_FORMAT: "json" or "pretty"
+
+
+# Relay.md public keys
+[[auth]]
+key_id = "relay_2025_10_22"
+public_key = "/6OgBTHaRdWLogewMdyE+7AxnI0/HP3WGqRs/bYBlFg="
+
+[[auth]]
+key_id = "relay_2025_10_23"
+public_key = "fbm9JLHrwPpST5HAYORTQR/i1VbZ1kdp2ZEy0XpMbf0="
+
+
+# Storage backend configuration
+# NOTE: S3-compatible storage is required for attachment storage, and highly
+#       recommended for production use-cases.
+[store]
+type = "filesystem"               # RELAY_SERVER_STORAGE (as s3://bucket/prefix)
+path = "./data"
+
+# ==== AWS S3 ====
+# [store]
+# type = "aws"
+# bucket = "my-bucket"
+# region = "us-east-1"         # Optional, defaults to "us-east-1"
+# access_key_id = "AKIA..."
+# secret_access_key = "secret..."
+# prefix = ""                  # Optional path prefix within bucket
+
+# ==== Cloudflare R2 ====
+# [store]
+# type = "cloudflare"
+# bucket = "my-bucket"
+# account_id = "abc123..."
+# access_key_id = "token_value"
+# secret_access_key = "token_secret"
+# prefix = ""                  # Optional path prefix within bucket
+
+# ==== Backblaze B2 ====
+# [store]
+# type = "backblaze"
+# bucket = "my-bucket"
+# key_id = "key_id_here"
+# application_key = "app_key_here"
+# prefix = ""                  # Optional path prefix within bucket
+
+# ==== MinIO ====
+# [store]
+# type = "minio"
+# bucket = "my-bucket"
+# endpoint = "https://minio.example.com:9000"
+# access_key = "minioadmin"
+# secret_key = "minioadmin"
+# prefix = ""                  # Optional path prefix within bucket
+
+# ==== Tigris ====
+# [store]
+# type = "tigris"
+# bucket = "my-bucket"
+# access_key_id = "token_value"
+# secret_access_key = "token_secret"
+# prefix = ""                  # Optional path prefix within bucket
+
+# ==== Generic S3 Configuration ====
+# [store]
+# type = "s3"
+# bucket = "relay-docs"
+# region = "us-east-1"
+# endpoint = ""                 # AWS_ENDPOINT_URL_S3 (for S3-compatible services)
+# path_style = false            # AWS_S3_USE_PATH_STYLE
+# presigned_url_expiration = 3600  # RELAY_SERVER_S3_PRESIGNED_URL_EXPIRATION
+# prefix = ""
+# access_key_id = "AKIA..."
+# secret_access_key = "secret..."
+
+# ==== In-Memory Storage ====
+# NOTE: This does not support attachments
+# [store]
+# type = "memory"
+
+
+# [[webhooks]]
+# # Webhook configuration (can have multiple)
+# # Can be overridden by RELAY_SERVER_WEBHOOK_CONFIG (as JSON array)
+# url = "https://webhook.example.com/relay"
+# auth_token = "Bearer webhook_secret_123"
+# prefix = "{relay-guid}"           # Optional: only send events for docs with this prefix
+# timeout_ms = 5000             # Optional: request timeout
+
+

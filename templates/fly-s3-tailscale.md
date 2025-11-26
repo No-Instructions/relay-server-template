@@ -1,21 +1,34 @@
-# Fly.io + S3 + Tailscale (http)
+# Fly.io + AWS S3 + Tailscale (HTTP)
+
+This template sets up a Relay Server on Fly.io with AWS S3 storage, accessible via Tailscale private network.
+
+## Prerequisites
+
+- [Fly.io account](https://fly.io/) and `flyctl` installed
+- [Tailscale account](https://tailscale.com/) with admin access
+- [AWS S3](https://aws.amazon.com/s3/) bucket and IAM credentials
+
+## Setup Instructions
+
+### 1. Create the configuration file
+
+Create a file named **`relay.toml`** in your project directory:
 
 ```toml
-# relay.toml
 [server]
 host = "0.0.0.0"
 port = 8080
 
-# Set this to the private URL of your Relay Server
-# url = http://relay-server.${TAILNET_NAME}.ts.net:8080
+# Set this to your Fly.io app URL with Tailscale
+# url = "http://YOUR-APP-NAME.flycast:8080"
 
 [store]
 type = "aws"
-bucket = "my-bucket"
-region = "us-east-1"
-prefix = ""                  # Optional path prefix within bucket
+bucket = "YOUR-BUCKET-NAME"          # Replace with your S3 bucket name
+region = "us-east-1"                 # Replace with your AWS region
+prefix = ""                          # Optional: path prefix within bucket
 
-# Relay.md public keys
+# Relay.md public keys (do not change these)
 [[auth]]
 key_id = "relay_2025_10_22"
 public_key = "/6OgBTHaRdWLogewMdyE+7AxnI0/HP3WGqRs/bYBlFg="
@@ -25,29 +38,41 @@ key_id = "relay_2025_10_23"
 public_key = "fbm9JLHrwPpST5HAYORTQR/i1VbZ1kdp2ZEy0XpMbf0="
 ```
 
-```auth.env
-# Tailscale
-TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY}
+### 2. Create the environment file
 
-# AWS S3
-AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+Create a file named **`auth.env`** with your credentials:
+
+```bash
+# Tailscale - Get this from https://login.tailscale.com/admin/settings/keys
+TAILSCALE_AUTHKEY=tskey-auth-XXXXXX-XXXXXXXXX
+
+# AWS S3 - Get these from AWS IAM console
+AWS_ACCESS_KEY_ID=AKIA...
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
 ```
 
-```Dockerfile
+### 3. Create the Dockerfile
+
+Create a file named **`Dockerfile`**:
+
+```dockerfile
 FROM docker.system3.md/relay-server:latest
 COPY relay.toml /app/relay.toml
 ```
 
-```fly.toml
-app = '${FLY_APP_NAME}'
+### 4. Create the Fly.io configuration
 
-primary_region = '${FLY_REGION}'  # flyctl platform regions
+Create a file named **`fly.toml`**:
+
+```toml
+app = 'YOUR-APP-NAME'              # Replace with your chosen app name
+
+primary_region = 'sjc'             # Replace with your preferred region
 kill_signal = 'SIGTERM'
 kill_timeout = '5m0s'
 
 [build]
-  dockerfile = Dockerfile
+  dockerfile = "Dockerfile"
 
 [experimental]
   auto_rollback = true
@@ -67,8 +92,41 @@ kill_timeout = '5m0s'
   cpus = 1
 ```
 
+### 5. Update your configuration
+
+1. **Replace placeholders**:
+   - In `relay.toml`: Update `YOUR-BUCKET-NAME` and AWS region
+   - In `fly.toml`: Update `YOUR-APP-NAME` and preferred region
+
+2. **Create the Fly.io app**:
+   ```bash
+   flyctl apps create YOUR-APP-NAME
+   ```
+
+### 6. Deploy to Fly.io
+
 ```bash
 flyctl deploy \
     --file-secret auth.env \
-    --flycast  # private networking only
+    --flycast
 ```
+
+### 7. Get your server URL
+
+After deployment, your app will be available at:
+```
+http://YOUR-APP-NAME.flycast:8080
+```
+
+Update the `url` field in `relay.toml` with this URL, then redeploy:
+
+```bash
+flyctl deploy --file-secret auth.env --flycast
+```
+
+### 8. Register with Obsidian
+
+1. Connect to your Fly.io network via Tailscale or Fly.io WireGuard
+2. Open Obsidian
+3. Run the command: **Relay: Register self-hosted relay server**
+4. Enter your server URL: `http://YOUR-APP-NAME.flycast:8080`
