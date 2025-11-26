@@ -51,9 +51,9 @@ Choose where to run your server:
 
 ## Getting Started
 
-1. **Pick your template**: See [Templates](#templates) section below based on your choices above
+1. **Pick your deployment guide**: See [Deployment Guides](#deployment-guides) section below based on your choices above
 
-2. **Follow the template instructions**: Each template includes complete setup steps
+2. **Follow the deployment guide instructions**: Each deployment guide includes complete setup steps
 
 3. **Register your Relay Server**: Open Obsidian and run the command `Relay: Register self-hosted relay server`
 
@@ -74,39 +74,39 @@ You will find examples in this repo that use:
 - [MinIO](https://min.io) (self-hosted)
 - [Tigris](https://www.tigrisdata.com/docs/) (great for fly.io)
 
-## Templates
+## Deployment Guides
 
-Choose your template based on your decisions above:
+Choose your deployment guide based on your decisions above:
 
 ### Docker (Single container)
 
-| Storage | Network | Template |
+| Storage | Network | Deployment Guide |
 |---------|---------|----------|
-| AWS S3 | Tailscale | [docker-s3-tailscale.md](templates/docker-s3-tailscale.md) |
-| AWS S3 | Tailscale (HTTPS) | [docker-s3-tailscale-serve.md](templates/docker-s3-tailscale-serve.md) |
-| AWS S3 | Custom VPN | [docker-s3-custom.md](templates/docker-s3-custom.md) |
-| Cloudflare R2 | Tailscale | [docker-r2-tailscale.md](templates/docker-r2-tailscale.md) |
-| Cloudflare R2 | Tailscale (HTTPS) | [docker-r2-tailscale-serve.md](templates/docker-r2-tailscale-serve.md) |
-| Cloudflare R2 | Custom VPN | [docker-r2-custom.md](templates/docker-r2-custom.md) |
+| AWS S3 | Tailscale | [docker-s3-tailscale.md](guides/docker-s3-tailscale.md) |
+| AWS S3 | Tailscale (HTTPS) | [docker-s3-tailscale-serve.md](guides/docker-s3-tailscale-serve.md) |
+| AWS S3 | Custom VPN | [docker-s3-custom.md](guides/docker-s3-custom.md) |
+| Cloudflare R2 | Tailscale | [docker-r2-tailscale.md](guides/docker-r2-tailscale.md) |
+| Cloudflare R2 | Tailscale (HTTPS) | [docker-r2-tailscale-serve.md](guides/docker-r2-tailscale-serve.md) |
+| Cloudflare R2 | Custom VPN | [docker-r2-custom.md](guides/docker-r2-custom.md) |
 
 ### Fly.io (Serverless platform)
 
 See [Fly.io setup instructions](FLY.md) first, then choose:
 
-| Storage | Network | Template |
+| Storage | Network | Deployment Guide |
 |---------|---------|----------|
-| AWS S3 | Tailscale | [fly-s3-tailscale.md](templates/fly-s3-tailscale.md) |
-| AWS S3 | Tailscale (HTTPS) | [fly-s3-tailscale-serve.md](templates/fly-s3-tailscale-serve.md) |
-| AWS S3 | Custom VPN | [fly-s3-custom.md](templates/fly-s3-custom.md) |
-| Cloudflare R2 | Tailscale | [fly-r2-tailscale.md](templates/fly-r2-tailscale.md) |
-| Cloudflare R2 | Tailscale (HTTPS) | [fly-r2-tailscale-serve.md](templates/fly-r2-tailscale-serve.md) |
-| Cloudflare R2 | Custom VPN | [fly-r2-custom.md](templates/fly-r2-custom.md) |
+| AWS S3 | Tailscale | [fly-s3-tailscale.md](guides/fly-s3-tailscale.md) |
+| AWS S3 | Tailscale (HTTPS) | [fly-s3-tailscale-serve.md](guides/fly-s3-tailscale-serve.md) |
+| AWS S3 | Custom VPN | [fly-s3-custom.md](guides/fly-s3-custom.md) |
+| Cloudflare R2 | Tailscale | [fly-r2-tailscale.md](guides/fly-r2-tailscale.md) |
+| Cloudflare R2 | Tailscale (HTTPS) | [fly-r2-tailscale-serve.md](guides/fly-r2-tailscale-serve.md) |
+| Cloudflare R2 | Custom VPN | [fly-r2-custom.md](guides/fly-r2-custom.md) |
 
 ### Kubernetes (Enterprise)
 
-| Storage | Template |
+| Storage | Deployment Guide |
 |---------|----------|
-| Tigris | [kubernetes-tigris-azure](https://github.com/No-Instructions/relay-server-template/tree/main/templates/kubernetes) |
+| Tigris | [kubernetes-tigris-azure](https://github.com/No-Instructions/relay-server-template/tree/main/guides/kubernetes) |
 
 # Acknowledgements
 
