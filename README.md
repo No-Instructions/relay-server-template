@@ -1,10 +1,31 @@
-# Hosting an on-premise Relay Server
+# Self-hosting a Relay Server
 
-[Relay](https://relay.md) supports self-hosting your Relay Server for added privacy.
-
-If you host your own Relay Server it provides you with full privacy for your documents and attachments.
+[Relay](https://relay.md) supports self-hosting a Relay Server within your private network/VPN for document/attachment privacy.
 
 Relay's Control Plane handles login and permissions management, but is unable to read the contents of your documents.
+
+
+## Quick start
+
+Start the Relay Server container:
+```
+# mounts local volume, see production deployment guide for S3-compatible storage
+docker run \
+  -v data:/app/data \
+  -p 8080:8080 \
+  docker.system3.md/relay-server \
+  http://relay-server.my-network.internal:8080  # Your internal network URL
+```
+
+Register your server using the Relay Obsidian plugin:
+1. Log in
+2. Run the command `Relay: Register self-hosted Relay Server`
+3. Enter the relay-server URL (must match above)
+
+
+Keep your server accessible from within your VPN only. If you expose your server to the public internet it is technically possible for us to access your documents.
+
+Read the rest of this guide to understand how to set up a Relay Server in production.
 
 
 ## Security Architecture
@@ -29,13 +50,13 @@ Before getting started, you need to make three key decisions:
 ### 1. Storage Provider
 Choose where to store your data:
 
+Local Disk (not recommended for production)
+
 S3-Compatible storage providers:
 - **AWS S3**
 - **Cloudflare R2** - Easiest to set up
 - **Backblaze B2**
 - **Tigris** - Great for Fly.io deployments
-
-Local Disk (not recommended for production)
 
 ### 2. Network Access
 Choose how users will access your server:
