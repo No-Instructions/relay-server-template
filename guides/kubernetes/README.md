@@ -18,7 +18,7 @@ You'll need to edit [`values.yaml`](values.yaml) and fill it in with appropriate
 - `env.relayServerUrl`: URL for your service within your private network
 - `env.relayServerStorage`: S3 storage URL (e.g., "s3://your-bucket-name/")
 - `env.awsRegion`: AWS region (use "auto" for Tigris, R2)
-- `env.awsEndpointUrlS3`: For S3-compatible services (Tigris, MinIO, R2, etc.)
+- `env.awsEndpointUrlS3`: For S3-compatible services (Tigris, R2, etc.)
 - `env.awsS3UsePathStyle`: Set to "true" for path-style URLs if needed
 
 ## Secrets

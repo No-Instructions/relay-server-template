@@ -23,7 +23,7 @@ env:
   relayServerStorage: "s3://your-tigris-bucket-name-1986/"
   awsRegion: "auto"  # for AWS and sometimes other services
   
-  # For non-AWS S3-compatible services (Tigris, MinIO, R2, etc.)
+  # For non-AWS S3-compatible services (Tigris, R2, etc.)
   awsEndpointUrlS3: "https://fly.storage.tigris.dev"
   # awsS3UsePathStyle: "true"  # uncomment for path-style URLs if needed
 

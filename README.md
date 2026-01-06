@@ -71,7 +71,6 @@ You will find examples in this repo that use:
 - [AWS S3](https://aws.amazon.com/s3/)
 - [Cloudflare R2](https://www.cloudflare.com/developer-platform/products/r2/)
 - [Backblaze B2](https://www.backblaze.com/cloud-storage)
-- [MinIO](https://min.io) (self-hosted)
 - [Tigris](https://www.tigrisdata.com/docs/) (great for fly.io)
 
 ## Deployment Guides
