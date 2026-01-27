@@ -2,9 +2,11 @@ name: relay-server
 replicaCount: 1
 hostname: relay-server.zzz.com  # your custom domain
 image:
-  repository: docker.system3.md
-  tag: relay-server
+  repository: docker.system3.md/relay-server
+  tag: v0.9.2
   pullPolicy: Always
+  pullSecrets: [ ]
+#    - name: your-registry-secret-name
 resources:
   requests:
     cpu: 1
@@ -14,21 +16,45 @@ resources:
     memory: 4Gi
 port: 8080
 
-# Non-secret environment variables
+ingress:
+  certManager:
+    enabled: true
+    clusterIssuer: "letsencrypt"
+
 env:
   # URL for your service
   relayServerUrl: "https://relay-server.zzz.com"  # must match above hostname
-  
+
   # S3 storage
   relayServerStorage: "s3://your-tigris-bucket-name-1986/"
   awsRegion: "auto"  # for AWS and sometimes other services
-  
+
   # For non-AWS S3-compatible services (Tigris, R2, etc.)
   awsEndpointUrlS3: "https://fly.storage.tigris.dev"
   # awsS3UsePathStyle: "true"  # uncomment for path-style URLs if needed
 
-# if you don't use Azure KeyVault for your secrets, you'll need to figure out your own solution here,
-# and edit templates/secrets.yaml accordingly.
+  awsBucket: "your-tigris-bucket-name-1986"  # your bucket name
+
+# Secrets management
+# you can either use an existing Kubernetes Secret or use an external secrets manager like Azure KeyVault or 1Password.
+# the default secret name used by the chart is "<name>-s3-credentials" like "relay-server-s3-credentials".
+
+# if you use an existing Kubernetes Secret, specify its name and the keys to use here:
+# if you use an external secrets manager, be careful with overwriting these values below.
+secretReference:
+  name: relay-server-secret  # name of the Kubernetes Secret created by your secrets manager
+  keys:
+    # key in the Kubernetes Secret, if you use an external secrets manager, these keys must match the keys created there
+    awsAccessKeyId: AWS_ACCESS_KEY_ID
+    # key in the Kubernetes Secret, if you use an external secrets manager, these keys must match the keys created there
+    awsSecretAccessKey: AWS_SECRET_ACCESS_KEY
+
 azure:
   keyVault:
+    enabled: false
     name: an-azure-keyvault-name
+
+onePassword:
+  enabled: false  # not used in this chart
+  restartOnChange: false
+  onePasswordItemPath: "vaults/<your-vault-id>/items/<your-item-id>"
