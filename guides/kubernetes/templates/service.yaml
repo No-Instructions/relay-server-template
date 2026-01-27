@@ -5,7 +5,7 @@ metadata:
   labels: {{ include "{{ .Chart.Name }}.commonLabels" . | nindent 4 }}
 spec:
   ports:
-  - port: {{ .Values.port }}
+  - port: {{ .Values.port | default 8080 }}
     protocol: TCP
-    targetPort: {{ .Values.port }}
+    targetPort: {{ .Values.port | default 8080 }}
   selector: {{ include "{{ .Chart.Name }}.appLabel" . | nindent 4 }}

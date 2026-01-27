@@ -4,7 +4,9 @@ metadata:
   name: "{{ include "{{ .Chart.Name }}.fullname" . }}"
   labels: {{ include "{{ .Chart.Name }}.commonLabels" . | nindent 4 }}
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
+    {{- if .Values.ingress.certManager.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.certManager.clusterIssuer | default "letsencrypt" }}
+    {{- end }}
 spec:
   {{ $hostname := .Values.hostname }}
   ingressClassName: nginx
@@ -22,4 +24,4 @@ spec:
               service:
                 name: "{{ .Release.Name }}"
                 port:
-                  number: {{ .Values.port }}
+                  number: {{ .Values.port | default 8080 }}
