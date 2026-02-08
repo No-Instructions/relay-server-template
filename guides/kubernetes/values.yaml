@@ -21,12 +21,15 @@ ingress:
     enabled: true
     clusterIssuer: "letsencrypt"
 
+
+# See the examples configuration file:
+# https://github.com/No-Instructions/relay-server-template/blob/main/relay.toml.example#L78
 env:
   # URL for your service
   relayServerUrl: "https://relay-server.zzz.com"  # must match above hostname
 
   # S3 storage
-  relayServerStorage: "s3://your-tigris-bucket-name-1986/"
+  relayServerStorage: "s3"
   awsRegion: "auto"  # for AWS and sometimes other services
 
   # For non-AWS S3-compatible services (Tigris, R2, etc.)
