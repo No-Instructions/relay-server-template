@@ -29,7 +29,7 @@ env:
   relayServerUrl: "https://relay-server.zzz.com"  # must match above hostname
 
   # S3 storage
-  relayServerStorage: "s3"
+  relayServerStorage: "s3" # or for Tigris: "s3://your-tigris-bucket-name-1986/"
   awsRegion: "auto"  # for AWS and sometimes other services
 
   # For non-AWS S3-compatible services (Tigris, R2, etc.)
