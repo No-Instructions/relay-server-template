@@ -57,6 +57,7 @@ S3-Compatible storage providers:
 - **Cloudflare R2** - Easiest to set up
 - **Backblaze B2**
 - **Tigris** - Great for Fly.io deployments
+- **SeaweedFS** - Great for self-hosting
 
 ### 2. Network Access
 Choose how users will access your server:
@@ -93,6 +94,7 @@ You will find examples in this repo that use:
 - [Cloudflare R2](https://www.cloudflare.com/developer-platform/products/r2/)
 - [Backblaze B2](https://www.backblaze.com/cloud-storage)
 - [Tigris](https://www.tigrisdata.com/docs/) (great for fly.io)
+- [SeaweedFS](https://seaweedfs.com/)
 
 ## Deployment Guides
 
@@ -108,6 +110,7 @@ Choose your deployment guide based on your decisions above:
 | Cloudflare R2 | Tailscale | [docker-r2-tailscale.md](guides/docker-r2-tailscale.md) |
 | Cloudflare R2 | Tailscale (HTTPS) | [docker-r2-tailscale-serve.md](guides/docker-r2-tailscale-serve.md) |
 | Cloudflare R2 | Custom VPN | [docker-r2-custom.md](guides/docker-r2-custom.md) |
+| SeaweedFS | Custom VPN | [docker-seaweedfs-custom.md](guides/docker-seaweedfs-custom.md) |
 
 ### Fly.io (Serverless platform)
 
