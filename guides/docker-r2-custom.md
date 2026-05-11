@@ -78,7 +78,7 @@ Ensure the server is accessible on your private network:
 
 ```bash
 # Test connectivity from a client machine on your VPN
-curl http://YOUR-PRIVATE-IP:8080/health
+curl -i http://YOUR-PRIVATE-IP:8080/ready
 ```
 
 ### 6. Register with Obsidian
